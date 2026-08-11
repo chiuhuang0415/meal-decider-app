@@ -22,8 +22,8 @@ const DEFAULT_RECIPES = [
 ];
 
 // 狀態管理
-let foodList = JSON.parse(localStorage.getItem('meal_decider_foods_v7')) || DEFAULT_FOODS;
-let recipeList = JSON.parse(localStorage.getItem('meal_decider_recipes_v7')) || DEFAULT_RECIPES;
+let foodList = JSON.parse(localStorage.getItem('meal_decider_foods_v8')) || DEFAULT_FOODS;
+let recipeList = JSON.parse(localStorage.getItem('meal_decider_recipes_v8')) || DEFAULT_RECIPES;
 let eatingHistory = JSON.parse(localStorage.getItem('meal_decider_history')) || [];
 let weeklyLocks = JSON.parse(localStorage.getItem('meal_decider_weekly_locks')) || {};
 let weeklyData = JSON.parse(localStorage.getItem('meal_decider_weekly_data')) || null;
@@ -363,11 +363,12 @@ function renderRecipeList() {
     countEl.textContent = recipeList.length;
     grid.innerHTML = recipeList.map(r => `
         <div class="recipe-card" onclick="openRecipeModalById('${r.id}')">
+            <div style="font-size: 1.5rem; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">🍳</div>
             <div class="recipe-card-info">
                 <h4>${r.title}</h4>
                 <p>${r.ingredients ? r.ingredients.replace(/\n/g, ' ') : '尚無食材說明'}</p>
             </div>
-            <span onclick="event.stopPropagation(); deleteRecipe('${r.id}')" style="color: #ef4444; font-weight: bold; cursor: pointer; padding: 0.5rem;">✕</span>
+            <span onclick="event.stopPropagation(); deleteRecipe('${r.id}')" style="color: #ef4444; font-weight: bold; cursor: pointer; padding: 0.5rem; font-size: 1.1rem;">✕</span>
         </div>
     `).join('');
 }
