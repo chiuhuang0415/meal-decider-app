@@ -47,6 +47,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initFoodManager();
     initWeeklyPlanner();
 
+    window.addEventListener('resize', () => {
+        drawWheel();
+    });
+
     // 輪盤抽籤按鈕
     document.getElementById('spinBtn').addEventListener('click', spinWheel);
     document.getElementById('quickSpinBtn').addEventListener('click', quickSpin);
@@ -127,11 +131,22 @@ function initWheel() {
 }
 
 function drawWheel() {
-    if (!ctx) return;
+    if (!ctx || !canvas) return;
+
+    // 手機高 DPI 螢幕與動態寬度優化
+    const wrapper = canvas.parentElement;
+    if (wrapper) {
+        const size = Math.min(wrapper.clientWidth, wrapper.clientHeight) || 320;
+        if (canvas.width !== size * 2) {
+            canvas.width = size * 2;
+            canvas.height = size * 2;
+        }
+    }
+
     const count = currentFilteredList.length;
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    const radius = canvas.width / 2 - 10;
+    const radius = canvas.width / 2 - 16;
     const sliceAngle = (Math.PI * 2) / count;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
