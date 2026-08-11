@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=2.0.0">
+    <link rel="stylesheet" href="styles.css?v=3.0.0">
 </head>
 <body>
     <div class="background-blobs">
@@ -29,19 +29,15 @@
     </header>
 
     <main class="container">
-        <!-- 頁籤一：手機優化版拉霸/卡片抽籤 -->
+        <!-- 頁籤一：手機拉霸卡片抽籤 -->
         <section id="slot-sec" class="tab-content active">
-            <!-- 手機大卡片 / 拉霸顯示區 -->
             <div class="card glass slot-card">
-                <div class="slot-display-wrapper">
-                    <div class="slot-tag" id="slotCategoryTag">✨ 今日驚喜提案</div>
-                    <div class="slot-window">
-                        <div id="slotText" class="slot-text">🎲 點擊下方按鈕</div>
-                    </div>
-                    <p id="slotReasonText" class="slot-reason">「放空大腦，讓命運為你選擇最佳美味！」</p>
+                <div class="slot-tag" id="slotCategoryTag">✨ 今日美味提案</div>
+                <div class="slot-window">
+                    <div id="slotText" class="slot-text">🎲 點擊下方按鈕</div>
                 </div>
+                <p id="slotReasonText" class="slot-reason">「放空大腦，讓命運為你選擇最佳美味！」</p>
 
-                <!-- 手機超級大抽籤按鈕 (極致觸控感) -->
                 <div class="slot-action-area">
                     <button id="slotSpinBtn" class="hero-spin-btn">
                         <span class="btn-icon">🎰</span>
@@ -55,7 +51,7 @@
                 </div>
             </div>
 
-            <!-- 情境快篩 (手機側滑/摺疊) -->
+            <!-- 情境快篩 -->
             <div class="card glass mobile-filter-card">
                 <div class="filter-header" id="toggleFilterBtn">
                     <span>🎛️ 智慧情境篩選 (點擊展開)</span>
@@ -88,10 +84,8 @@
         <!-- 頁籤二：一週菜單規劃 -->
         <section id="weekly-sec" class="tab-content">
             <div class="card glass weekly-card">
-                <div class="weekly-header">
-                    <h2>🗓️ 一週飲食備忘錄</h2>
-                    <button id="genWeeklyBtn" class="btn btn-primary">✨ 一鍵生成全週菜單</button>
-                </div>
+                <h2>🗓️ 一週飲食備忘錄</h2>
+                <button id="genWeeklyBtn" class="btn-primary" style="width: 100%; margin: 0.8rem 0;">✨ 一鍵生成全週菜單</button>
                 <div class="weekly-grid" id="weeklyGrid"></div>
             </div>
         </section>
@@ -109,14 +103,14 @@
                         <option value="fast">🍔 快餐</option>
                         <option value="exotic">🍕 異國</option>
                     </select>
-                    <button type="submit" class="btn btn-success">+ 新增</button>
+                    <button type="submit" class="btn-success">+ 新增至名單</button>
                 </form>
                 <div id="foodList" class="food-chip-list"></div>
             </div>
         </section>
     </main>
 
-    <!-- 固定於手機底部的全域導覽列 (Bottom Floating Tab Bar) -->
+    <!-- 固定於手機底部的全域導覽列 -->
     <nav class="bottom-nav">
         <button class="bottom-tab active" data-tab="slot-sec">
             <span class="icon">🎲</span>
@@ -133,6 +127,6 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="app.js?v=2.0.0"></script>
+    <script src="app.js?v=3.0.0"></script>
 </body>
 </html>
