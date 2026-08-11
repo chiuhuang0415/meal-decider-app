@@ -1,99 +1,67 @@
-// app.js - Meal Decider Pro Logic
+// app.js - Meal Decider Pro v2.0 Native Mobile App Logic
 
-// 1. 預設豐富美食資料庫
 const DEFAULT_FOODS = [
-    { id: '1', name: '日式拉麵', category: 'noodle', mealType: 'all', speed: 'sit', reason: '濃郁湯頭與彈牙麵條，能為忙碌的一天帶來滿滿療癒感！' },
-    { id: '2', name: '經典便當 (排骨/雞腿)', category: 'rice', mealType: 'lunch', speed: 'quick', reason: '主菜雙拼加三樣配菜，最懂台灣人的高CP值飽足首選。' },
-    { id: '3', name: '健康舒肥雞餐盒', category: 'light', mealType: 'lunch', speed: 'quick', reason: '低升糖高蛋白質，午後不昏睡、身體輕盈無負擔。' },
-    { id: '4', name: '牛肉麵 (紅燒/清燉)', category: 'noodle', mealType: 'all', speed: 'sit', reason: '軟嫩牛肉搭配大骨慢熬高湯，每一口都是道地經典。' },
-    { id: '5', name: '義大利麵 / 燉飯', category: 'exotic', mealType: 'dinner', speed: 'sit', reason: '奶油白醬或濃郁青醬，享受滿滿異國浪漫風味。' },
-    { id: '6', name: '韓式鍋物 / 部隊鍋', category: 'exotic', mealType: 'dinner', speed: 'sit', reason: '酸辣泡菜湯底配上融化起司，跟朋友聚餐熱鬧又開胃。' },
-    { id: '7', name: '手工水餃 / 煎餃', category: 'noodle', mealType: 'all', speed: 'quick', reason: '一口一個多汁飽滿，快速美味、不花時間思考！' },
-    { id: '8', name: '美式漢堡 / 薯條', category: 'fast', mealType: 'all', speed: 'quick', reason: '多汁牛肉排搭配爆汁起司，犒賞自己的快感首選。' },
-    { id: '9', name: '旋轉壽司 / 海鮮丼', category: 'exotic', mealType: 'all', speed: 'sit', reason: '鮮甜生魚片與醋飯完美結合，輕巧無負擔的精緻享受。' },
-    { id: '10', name: '泰式綠咖哩飯', category: 'exotic', mealType: 'dinner', speed: 'sit', reason: '椰奶香氣與微辣辛香料，秒飛東南亞的開胃神作。' },
-    { id: '11', name: '海南雞飯', category: 'rice', mealType: 'lunch', speed: 'quick', reason: '滑嫩雞肉搭配香氣爆棚的雞油飯，清爽又美味。' },
-    { id: '12', name: '鹹酥雞 / 宵夜炸物', category: 'fast', mealType: 'dinner', speed: 'quick', reason: '偶爾放縱一下，九層塔香氣配上紓壓炸物萬歲！' },
-    { id: '13', name: '越南河粉 (Pho)', category: 'noodle', mealType: 'all', speed: 'quick', reason: '清爽檸檬與九層塔高湯，滑順河粉暖心暖胃。' },
-    { id: '14', name: '石鍋拌飯 / 燒肉飯', category: 'rice', mealType: 'dinner', speed: 'sit', reason: '香噴噴焦香鍋巴配上豐富配菜，一口接一口停不下來。' }
+    { id: '1', name: '日式拉麵', category: 'noodle', mealType: 'all', reason: '濃郁湯頭與彈牙麵條，能為忙碌的一天帶來滿滿療癒感！' },
+    { id: '2', name: '排骨/雞腿便當', category: 'rice', mealType: 'lunch', reason: '主菜雙拼加三樣配菜，最懂台灣人的高CP值飽足首選。' },
+    { id: '3', name: '健康舒肥雞餐盒', category: 'light', mealType: 'lunch', reason: '低升糖高蛋白質，午後不昏睡、身體輕盈無負擔。' },
+    { id: '4', name: '紅燒牛肉麵', category: 'noodle', mealType: 'all', reason: '軟嫩牛肉搭配大骨慢熬高湯，每一口都是道地經典。' },
+    { id: '5', name: '義大利麵 / 燉飯', category: 'exotic', mealType: 'dinner', reason: '奶油白醬或濃郁青醬，享受滿滿異國浪漫風味。' },
+    { id: '6', name: '韓式泡菜鍋物', category: 'exotic', mealType: 'dinner', reason: '酸辣泡菜湯底配上融化起司，熱鬧開胃第一名。' },
+    { id: '7', name: '手工煎餃 / 水餃', category: 'noodle', mealType: 'all', reason: '一口一個多汁飽滿，快速美味、不花時間思考！' },
+    { id: '8', name: '美式雙層起司堡', category: 'fast', mealType: 'all', reason: '多汁牛肉排搭配爆汁起司，犒賞自己的快感首選。' },
+    { id: '9', name: '迴轉壽司 / 丼飯', category: 'exotic', mealType: 'all', reason: '鮮甜生魚片與醋飯完美結合，輕巧無負擔的精緻享受。' },
+    { id: '10', name: '泰式綠咖哩雞飯', category: 'exotic', mealType: 'dinner', reason: '椰奶香氣與微辣辛香料，秒飛東南亞的開胃神作。' },
+    { id: '11', name: '滑嫩海南雞飯', category: 'rice', mealType: 'lunch', reason: '滑嫩雞肉搭配香氣爆棚的雞油飯，清爽又美味。' },
+    { id: '12', name: '鹹酥雞 / 炸雞分享餐', category: 'fast', mealType: 'dinner', reason: '偶爾放縱一下，九層塔香氣配上紓壓炸物萬歲！' },
+    { id: '13', name: '越式鮮牛河粉', category: 'noodle', mealType: 'all', reason: '清爽檸檬與九層塔高湯，滑順河粉暖心暖胃。' },
+    { id: '14', name: '韓式石鍋拌飯', category: 'rice', mealType: 'dinner', reason: '香噴噴焦香鍋巴配上豐富配菜，一口接一口停不下來。' }
 ];
 
-// 色彩庫 (輪盤扇形顏色)
-const WHEEL_COLORS = [
-    '#6366f1', '#ec4899', '#10b981', '#f59e0b', 
-    '#06b6d4', '#8b5cf6', '#f43f5e', '#84cc16'
-];
-
-// App 狀態
 let foodList = JSON.parse(localStorage.getItem('meal_decider_foods')) || DEFAULT_FOODS;
-let activeFilters = {
-    mealType: 'all',
-    category: 'all',
-    speed: 'all'
-};
-
-// Canvas & Wheel 狀態
-const canvas = document.getElementById('wheelCanvas');
-const ctx = canvas ? canvas.getContext('2d') : null;
-let currentRotation = 0;
-let isSpinning = false;
+let activeFilters = { mealType: 'all', category: 'all' };
 let currentFilteredList = [...foodList];
+let selectedFoodName = '';
+let isRolling = false;
 
-// 2. 初始化與事件綁定
 document.addEventListener('DOMContentLoaded', () => {
-    initTabs();
-    initFilterChips();
-    initWheel();
+    initBottomNav();
+    initFilterDrawer();
+    initSlotMachine();
     initFoodManager();
     initWeeklyPlanner();
-
-    window.addEventListener('resize', () => {
-        drawWheel();
-    });
-
-    // 輪盤抽籤按鈕
-    document.getElementById('spinBtn').addEventListener('click', spinWheel);
-    document.getElementById('quickSpinBtn').addEventListener('click', quickSpin);
-    document.getElementById('blindBoxBtn').addEventListener('click', blindBoxSpin);
-
-    // 結果處置按鈕
-    document.getElementById('acceptBtn').addEventListener('click', () => {
-        if (window.confetti) {
-            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        }
-        alert('🎉 太棒了！今天就享受美味吧！已為你記下這美妙的一餐。');
-    });
-
-    document.getElementById('retryBtn').addEventListener('click', () => {
-        spinWheel();
-    });
+    updateFilteredList();
 });
 
-// 3. 頁籤切換邏輯
-function initTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+// 1. 底部導覽列切換
+function initBottomNav() {
+    const tabs = document.querySelectorAll('.bottom-tab');
+    const contents = document.querySelectorAll('.tab-content');
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
 
-            btn.classList.add('active');
-            const target = btn.getAttribute('data-tab');
+            tab.classList.add('active');
+            const target = tab.getAttribute('data-tab');
             document.getElementById(target).classList.add('active');
-
-            if (target === 'wheel-sec') {
-                drawWheel();
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 }
 
-// 4. 情境篩選晶片邏輯
-function initFilterChips() {
-    const chipGroups = document.querySelectorAll('.chip-group');
+// 2. 情境篩選抽屜
+function initFilterDrawer() {
+    const toggleBtn = document.getElementById('toggleFilterBtn');
+    const filterBody = document.getElementById('filterBody');
 
+    if (toggleBtn && filterBody) {
+        toggleBtn.addEventListener('click', () => {
+            filterBody.classList.toggle('hidden');
+        });
+    }
+
+    const chipGroups = document.querySelectorAll('.chip-group');
     chipGroups.forEach(group => {
         const filterType = group.getAttribute('data-filter');
         const chips = group.querySelectorAll('.chip');
@@ -102,7 +70,6 @@ function initFilterChips() {
             chip.addEventListener('click', () => {
                 chips.forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
-
                 activeFilters[filterType] = chip.getAttribute('data-val');
                 updateFilteredList();
             });
@@ -114,306 +81,170 @@ function updateFilteredList() {
     currentFilteredList = foodList.filter(item => {
         const matchMeal = activeFilters.mealType === 'all' || item.mealType === 'all' || item.mealType === activeFilters.mealType;
         const matchCat = activeFilters.category === 'all' || item.category === activeFilters.category;
-        const matchSpeed = activeFilters.speed === 'all' || item.speed === 'all' || item.speed === activeFilters.speed;
-        return matchMeal && matchCat && matchSpeed;
+        return matchMeal && matchCat;
     });
 
     if (currentFilteredList.length === 0) {
-        currentFilteredList = [...foodList]; // Fallback 如果篩選為空
-    }
-
-    drawWheel();
-}
-
-// 5. Canvas 轉盤繪製與物理動畫
-function initWheel() {
-    updateFilteredList();
-}
-
-function drawWheel() {
-    if (!ctx || !canvas) return;
-
-    // 手機高 DPI 螢幕與動態寬度優化
-    const wrapper = canvas.parentElement;
-    if (wrapper) {
-        const size = Math.min(wrapper.clientWidth, wrapper.clientHeight) || 320;
-        if (canvas.width !== size * 2) {
-            canvas.width = size * 2;
-            canvas.height = size * 2;
-        }
-    }
-
-    const count = currentFilteredList.length;
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = canvas.width / 2 - 16;
-    const sliceAngle = (Math.PI * 2) / count;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < count; i++) {
-        const angle = i * sliceAngle + currentRotation;
-        
-        // 繪製扇形
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, angle, angle + sliceAngle);
-        ctx.closePath();
-        ctx.fillStyle = WHEEL_COLORS[i % WHEEL_COLORS.length];
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(15, 23, 42, 0.5)';
-        ctx.stroke();
-
-        // 繪製文字
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(angle + sliceAngle / 2);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 15px "Noto Sans TC", sans-serif';
-        ctx.fillText(currentFilteredList[i].name, radius - 25, 5);
-        ctx.restore();
+        currentFilteredList = [...foodList];
     }
 }
 
-function spinWheel() {
-    if (isSpinning || currentFilteredList.length === 0) return;
-    isSpinning = true;
-    document.getElementById('resultBox').classList.add('hidden');
+// 3. 拉霸 Slot Machine 視覺滾動邏輯
+function initSlotMachine() {
+    const spinBtn = document.getElementById('slotSpinBtn');
+    const blindBtn = document.getElementById('slotBlindBtn');
+    const mapBtn = document.getElementById('slotMapBtn');
+    const slotText = document.getElementById('slotText');
+    const slotReason = document.getElementById('slotReasonText');
+    const slotCategoryTag = document.getElementById('slotCategoryTag');
 
-    const totalRounds = 5 + Math.random() * 5; // 旋轉 5~10 圈
-    const targetAngle = totalRounds * Math.PI * 2;
-    const startTime = performance.now();
-    const duration = 4000; // 4秒
-
-    function animateSpin(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        // Ease Out Cubic 緩降效果
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        currentRotation = targetAngle * easeOut;
-
-        drawWheel();
-
-        if (progress < 1) {
-            requestAnimationFrame(animateSpin);
-        } else {
-            isSpinning = false;
-            showSpinResult();
-        }
+    if (spinBtn) {
+        spinBtn.addEventListener('click', () => {
+            if (isRolling) return;
+            startSlotRoll(false);
+        });
     }
 
-    requestAnimationFrame(animateSpin);
-}
-
-function showSpinResult() {
-    const count = currentFilteredList.length;
-    const sliceAngle = (Math.PI * 2) / count;
-    
-    // 頂點針頭在 -90度 (Math.PI * 1.5)
-    let normalizedRotation = (currentRotation % (Math.PI * 2));
-    let winningIndex = Math.floor((Math.PI * 2 - (normalizedRotation % (Math.PI * 2)) + Math.PI * 1.5) % (Math.PI * 2) / sliceAngle);
-    winningIndex = (winningIndex + count) % count;
-
-    const selectedFood = currentFilteredList[winningIndex];
-    displayResult(selectedFood);
-}
-
-function quickSpin() {
-    if (isSpinning) return;
-    const randomIndex = Math.floor(Math.random() * currentFilteredList.length);
-    displayResult(currentFilteredList[randomIndex]);
-}
-
-function blindBoxSpin() {
-    if (isSpinning) return;
-    const randomIndex = Math.floor(Math.random() * foodList.length);
-    const chosen = foodList[randomIndex];
-    displayResult({
-        ...chosen,
-        name: `🎁 盲盒驚喜：${chosen.name}`,
-        reason: `「不敢相信吧！命運盲盒為你抽中了【${chosen.name}】，閉上眼睛吃就對了！」`
-    });
-}
-
-let lastSelectedFoodName = '';
-
-function displayResult(food) {
-    const resultBox = document.getElementById('resultBox');
-    lastSelectedFoodName = food.name.replace('🎁 盲盒驚喜：', '');
-    document.getElementById('resultTitle').textContent = food.name;
-    document.getElementById('resultReason').textContent = food.reason || '「試試這款美食，今天絕對不會失望！」';
-
-    resultBox.classList.remove('hidden');
-    resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-    if (window.confetti) {
-        confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+    if (blindBtn) {
+        blindBtn.addEventListener('click', () => {
+            if (isRolling) return;
+            startSlotRoll(true);
+        });
     }
-}
 
-// 聯網地圖與外送平台即時搜尋
-document.addEventListener('DOMContentLoaded', () => {
-    const searchMapBtn = document.getElementById('searchMapBtn');
-    const searchUberBtn = document.getElementById('searchUberBtn');
-
-    if (searchMapBtn) {
-        searchMapBtn.addEventListener('click', () => {
-            if (!lastSelectedFoodName) return;
-            
-            // 嘗試獲取使用者目前位置，開啟精準 Google 地圖搜尋
+    if (mapBtn) {
+        mapBtn.addEventListener('click', () => {
+            if (!selectedFoodName) return;
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (pos) => {
-                        const lat = pos.coords.latitude;
-                        const lng = pos.coords.longitude;
-                        const url = `https://www.google.com/maps/search/${encodeURIComponent(lastSelectedFoodName)}/@${lat},${lng},15z`;
+                        const url = `https://www.google.com/maps/search/${encodeURIComponent(selectedFoodName)}/@${pos.coords.latitude},${pos.coords.longitude},15z`;
                         window.open(url, '_blank');
                     },
                     () => {
-                        // 定位拒絕或失敗時，直接搜尋名稱
-                        const url = `https://www.google.com/maps/search/${encodeURIComponent(lastSelectedFoodName + ' 附近')}`;
+                        const url = `https://www.google.com/maps/search/${encodeURIComponent(selectedFoodName + ' 附近')}`;
                         window.open(url, '_blank');
                     }
                 );
             } else {
-                const url = `https://www.google.com/maps/search/${encodeURIComponent(lastSelectedFoodName + ' 附近')}`;
+                const url = `https://www.google.com/maps/search/${encodeURIComponent(selectedFoodName + ' 附近')}`;
                 window.open(url, '_blank');
             }
         });
     }
-
-    if (searchUberBtn) {
-        searchUberBtn.addEventListener('click', () => {
-            if (!lastSelectedFoodName) return;
-            const url = `https://www.google.com/search?q=${encodeURIComponent(lastSelectedFoodName + ' 外送 foodpanda ubereats')}`;
-            window.open(url, '_blank');
-        });
-    }
-});
-
-// 6. 口袋名單管理
-function initFoodManager() {
-    renderFoodManagerList();
-
-    const form = document.getElementById('addFoodForm');
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nameInput = document.getElementById('foodName');
-        const catSelect = document.getElementById('foodCategory');
-        const mealSelect = document.getElementById('foodMealType');
-
-        const newFood = {
-            id: Date.now().toString(),
-            name: nameInput.value.trim(),
-            category: catSelect.value,
-            mealType: mealSelect.value,
-            speed: 'all',
-            reason: '這是你親手加入的私房口袋美食，一定超符合你的口味！'
-        };
-
-        foodList.push(newFood);
-        saveFoods();
-        nameInput.value = '';
-        renderFoodManagerList();
-        updateFilteredList();
-    });
 }
 
-function renderFoodManagerList() {
-    const container = document.getElementById('foodList');
+function startSlotRoll(isBlind) {
+    isRolling = true;
+    const slotText = document.getElementById('slotText');
+    const slotReason = document.getElementById('slotReasonText');
+    const mapBtn = document.getElementById('slotMapBtn');
+    const categoryTag = document.getElementById('slotCategoryTag');
+
+    mapBtn.classList.add('hidden');
+    slotText.classList.add('rolling');
+    categoryTag.textContent = isBlind ? '🎁 盲盒驚喜抽取中...' : '🎰 美食拉霸旋轉中...';
+
+    const pool = isBlind ? foodList : currentFilteredList;
+    let rollCount = 0;
+    const interval = setInterval(() => {
+        const tempIndex = Math.floor(Math.random() * pool.length);
+        slotText.textContent = pool[tempIndex].name;
+        rollCount++;
+    }, 60);
+
+    setTimeout(() => {
+        clearInterval(interval);
+        slotText.classList.remove('rolling');
+
+        const finalIndex = Math.floor(Math.random() * pool.length);
+        const winner = pool[finalIndex];
+        selectedFoodName = winner.name;
+
+        slotText.textContent = winner.name;
+        slotReason.textContent = winner.reason || '「就是這道美食！今天放膽去享用吧！」';
+        categoryTag.textContent = '🎉 今日決策首選';
+
+        mapBtn.classList.remove('hidden');
+        isRolling = false;
+
+        if (window.confetti) {
+            confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+        }
+    }, 1600);
+}
+
+// 4. 口袋名單
+function initFoodManager() {
+    renderFoodList();
+    const form = document.getElementById('addFoodForm');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('foodName');
+            const catSelect = document.getElementById('foodCategory');
+
+            const newFood = {
+                id: Date.now().toString(),
+                name: nameInput.value.trim(),
+                category: catSelect.value,
+                mealType: 'all',
+                reason: '這是你親手新增的私房口袋美食！'
+            };
+
+            foodList.push(newFood);
+            localStorage.setItem('meal_decider_foods', JSON.stringify(foodList));
+            nameInput.value = '';
+            renderFoodList();
+            updateFilteredList();
+        });
+    }
+}
+
+function renderFoodList() {
+    const listEl = document.getElementById('foodList');
     const countEl = document.getElementById('foodCount');
-    if (!container) return;
+    if (!listEl) return;
 
     countEl.textContent = foodList.length;
-    container.innerHTML = foodList.map(food => `
+    listEl.innerHTML = foodList.map(f => `
         <div class="food-chip">
-            <span>${getCategoryEmoji(food.category)} ${food.name}</span>
-            <button class="del-btn" onclick="deleteFood('${food.id}')">✕</button>
+            <span>${f.name}</span>
+            <span onclick="deleteFood('${f.id}')" style="color: #ef4444; cursor: pointer; font-weight: bold;">✕</span>
         </div>
     `).join('');
 }
 
 window.deleteFood = function(id) {
     foodList = foodList.filter(f => f.id !== id);
-    saveFoods();
-    renderFoodManagerList();
+    localStorage.setItem('meal_decider_foods', JSON.stringify(foodList));
+    renderFoodList();
     updateFilteredList();
 };
 
-function saveFoods() {
-    localStorage.setItem('meal_decider_foods', JSON.stringify(foodList));
-}
-
-function getCategoryEmoji(cat) {
-    const map = { rice: '🍚', noodle: '🍜', light: '🥗', fast: '🍔', exotic: '🍕' };
-    return map[cat] || '🍱';
-}
-
-// 7. 一週菜單自動生成邏輯
+// 5. 一週菜單
 function initWeeklyPlanner() {
     const genBtn = document.getElementById('genWeeklyBtn');
-    const copyBtn = document.getElementById('copyWeeklyBtn');
-
-    if (genBtn) genBtn.addEventListener('click', generateWeeklyPlan);
-    if (copyBtn) copyBtn.addEventListener('click', copyWeeklyMenuText);
-
-    // 初次預設生成一週
-    generateWeeklyPlan();
+    if (genBtn) {
+        genBtn.addEventListener('click', generateWeeklyGrid);
+    }
+    generateWeeklyGrid();
 }
 
-const DAYS = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
-
-function generateWeeklyPlan() {
+function generateWeeklyGrid() {
     const grid = document.getElementById('weeklyGrid');
     if (!grid) return;
 
-    let available = [...foodList];
-    let html = '';
-
-    DAYS.forEach(day => {
-        // 隨機抽午餐與晚餐，盡量不重複
-        const lunchIdx = Math.floor(Math.random() * available.length);
-        const lunch = available[lunchIdx] || foodList[0];
-        
-        let dinnerIdx = Math.floor(Math.random() * available.length);
-        if (dinnerIdx === lunchIdx) dinnerIdx = (dinnerIdx + 1) % available.length;
-        const dinner = available[dinnerIdx] || foodList[1];
-
-        html += `
+    const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
+    grid.innerHTML = days.map(d => {
+        const lunch = foodList[Math.floor(Math.random() * foodList.length)].name;
+        const dinner = foodList[Math.floor(Math.random() * foodList.length)].name;
+        return `
             <div class="day-card">
-                <h4><span>${day}</span> <span>🍱</span></h4>
-                <div class="meal-slot">
-                    <span class="type">🌞 午餐首選</span>
-                    <span class="name">${lunch.name}</span>
-                </div>
-                <div class="meal-slot dinner">
-                    <span class="type">🌙 晚餐犒賞</span>
-                    <span class="name">${dinner.name}</span>
-                </div>
+                <h4>${d} 🍱</h4>
+                <div class="meal-slot"><span>🌞 午餐</span><strong>${lunch}</strong></div>
+                <div class="meal-slot"><span>🌙 晚餐</span><strong>${dinner}</strong></div>
             </div>
         `;
-    });
-
-    grid.innerHTML = html;
-}
-
-function copyWeeklyMenuText() {
-    const dayCards = document.querySelectorAll('.day-card');
-    let text = '🍱 【本週靈感美饌備忘錄】\n------------------\n';
-
-    dayCards.forEach(card => {
-        const day = card.querySelector('h4 span').textContent;
-        const lunch = card.querySelectorAll('.meal-slot .name')[0].textContent;
-        const dinner = card.querySelectorAll('.meal-slot .name')[1].textContent;
-        text += `${day} | 午餐：${lunch} | 晚餐：${dinner}\n`;
-    });
-
-    text += '------------------\n💪 不再浪費大腦時間，快樂享受美食！';
-
-    navigator.clipboard.writeText(text).then(() => {
-        alert('📋 一週菜單已成功複製到剪貼簿！可貼至 Line、Notion 或記事本。');
-    });
+    }).join('');
 }

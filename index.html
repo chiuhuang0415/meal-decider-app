@@ -2,114 +2,83 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>靈感美饌決策助手 | 徹底解放你的吃什麼選擇疲勞</title>
-    <meta name="description" content="專為解決每日飲食選擇困難症打造的智慧決策工具。包含美觀轉盤抽籤、情境智慧篩選與一整週菜單自動規劃器。">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>靈感美饌決策助手 Pro</title>
+    <meta name="description" content="專為手機端打造的極速飲食決策工具。一鍵拉霸決策、解決選擇障礙。">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=2.0.0">
 </head>
 <body>
     <div class="background-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
     </div>
 
+    <!-- 頂部精簡 Header -->
     <header class="app-header">
         <div class="logo">
             <span class="icon">🍱</span>
             <div class="logo-text">
                 <h1>靈感美饌決策助手</h1>
-                <p>Meal Decider Pro • 擺脫選擇障礙，解放腦力</p>
+                <p>Mobile App Mode • 秒定今日美味</p>
             </div>
         </div>
-        <nav class="nav-tabs">
-            <button class="tab-btn active" data-tab="wheel-sec">🎯 幸運決策輪盤</button>
-            <button class="tab-btn" data-tab="weekly-sec">🗓️ 一週菜單預約</button>
-            <button class="tab-btn" data-tab="manage-sec">⚙️ 我的美食庫</button>
-        </nav>
     </header>
 
     <main class="container">
-        <!-- 頁籤一：輪盤抽籤 -->
-        <section id="wheel-sec" class="tab-content active">
-            <div class="grid-2col">
-                <!-- 左側：轉盤控制與可視化 -->
-                <div class="card glass wheel-card">
-                    <div class="wheel-header">
-                        <h2>今天吃什麼？</h2>
-                        <p class="subtitle">放空大腦，讓命運指引今日美味</p>
+        <!-- 頁籤一：手機優化版拉霸/卡片抽籤 -->
+        <section id="slot-sec" class="tab-content active">
+            <!-- 手機大卡片 / 拉霸顯示區 -->
+            <div class="card glass slot-card">
+                <div class="slot-display-wrapper">
+                    <div class="slot-tag" id="slotCategoryTag">✨ 今日驚喜提案</div>
+                    <div class="slot-window">
+                        <div id="slotText" class="slot-text">🎲 點擊下方按鈕</div>
                     </div>
-
-                    <div class="wheel-wrapper">
-                        <div class="pointer">▼</div>
-                        <canvas id="wheelCanvas" width="420" height="420"></canvas>
-                        <button id="spinBtn" class="spin-center-btn">SPIN!</button>
-                    </div>
-
-                    <div class="action-bar">
-                        <button id="quickSpinBtn" class="btn btn-primary pulse">⚡ 極速隨機抽籤</button>
-                        <button id="blindBoxBtn" class="btn btn-secondary">🎁 驚喜美食盲盒</button>
-                    </div>
+                    <p id="slotReasonText" class="slot-reason">「放空大腦，讓命運為你選擇最佳美味！」</p>
                 </div>
 
-                <!-- 右側：篩選條件與結果展示 -->
-                <div class="card glass right-panel">
-                    <!-- 隨機結果展示盒 -->
-                    <div id="resultBox" class="result-box hidden">
-                        <div class="result-badge">今日首選</div>
-                        <h3 id="resultTitle">日式拉麵</h3>
-                        <p id="resultTags" class="result-tags">
-                            <span class="tag">午餐/晚餐</span>
-                            <span class="tag">熱騰騰</span>
-                        </p>
-                        <p id="resultReason" class="result-reason">「濃郁湯頭與彈牙麵條，能為忙碌的一天帶來滿滿療癒感！」</p>
-                        <div class="result-actions">
-                            <button id="acceptBtn" class="btn btn-success">✅ 就吃這個！(標記已選)</button>
-                            <button id="retryBtn" class="btn btn-outline">🔄 換一個</button>
-                        </div>
-                        <div class="result-online-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                            <button id="searchMapBtn" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.6rem 1rem;">📍 尋找附近店家 (Google Maps)</button>
-                            <button id="searchUberBtn" class="btn btn-secondary" style="font-size: 0.85rem; padding: 0.6rem 1rem;">🛵 尋找外送平台</button>
+                <!-- 手機超級大抽籤按鈕 (極致觸控感) -->
+                <div class="slot-action-area">
+                    <button id="slotSpinBtn" class="hero-spin-btn">
+                        <span class="btn-icon">🎰</span>
+                        <span class="btn-text">幫我決定今天吃什麼！</span>
+                    </button>
+
+                    <div class="secondary-actions">
+                        <button id="slotBlindBtn" class="sub-btn">🎁 驚喜盲盒</button>
+                        <button id="slotMapBtn" class="sub-btn map-btn hidden">📍 尋找附近店家</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 情境快篩 (手機側滑/摺疊) -->
+            <div class="card glass mobile-filter-card">
+                <div class="filter-header" id="toggleFilterBtn">
+                    <span>🎛️ 智慧情境篩選 (點擊展開)</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <div class="filter-body hidden" id="filterBody">
+                    <div class="filter-group">
+                        <label>餐別時間</label>
+                        <div class="chip-group" data-filter="mealType">
+                            <button class="chip active" data-val="all">全部</button>
+                            <button class="chip" data-val="lunch">🌞 午餐</button>
+                            <button class="chip" data-val="dinner">🌙 晚餐</button>
                         </div>
                     </div>
-
-                    <!-- 篩選條件設定 -->
-                    <div class="filter-section">
-                        <h3><span class="icon font-icon">🎛️</span> 智慧情境篩選</h3>
-                        <p class="filter-hint">根據現在的心情或狀態收窄選項：</p>
-                        
-                        <div class="filter-group">
-                            <label>餐別時間</label>
-                            <div class="chip-group" data-filter="mealType">
-                                <button class="chip active" data-val="all">全部</button>
-                                <button class="chip" data-val="lunch">午餐輕鬆吃</button>
-                                <button class="chip" data-val="dinner">晚餐豐盛吃</button>
-                            </div>
-                        </div>
-
-                        <div class="filter-group">
-                            <label>想走的風格</label>
-                            <div class="chip-group" data-filter="category">
-                                <button class="chip active" data-val="all">不限</button>
-                                <button class="chip" data-val="rice">飯食米飯</button>
-                                <button class="chip" data-val="noodle">麵食粉類</button>
-                                <button class="chip" data-val="light">清爽健康/沙拉</button>
-                                <button class="chip" data-val="fast">快餐/漢堡/炸雞</button>
-                                <button class="chip" data-val="exotic">異國料理</button>
-                            </div>
-                        </div>
-
-                        <div class="filter-group">
-                            <label>距離與速度</label>
-                            <div class="chip-group" data-filter="speed">
-                                <button class="chip active" data-val="all">不限</button>
-                                <button class="chip" data-val="quick">10分鐘搞定</button>
-                                <button class="chip" data-val="sit">可坐下慢慢享用</button>
-                            </div>
+                    <div class="filter-group">
+                        <label>美食類別</label>
+                        <div class="chip-group" data-filter="category">
+                            <button class="chip active" data-val="all">不限</button>
+                            <button class="chip" data-val="rice">🍚 米飯</button>
+                            <button class="chip" data-val="noodle">🍜 麵食</button>
+                            <button class="chip" data-val="light">🥗 清爽</button>
+                            <button class="chip" data-val="fast">🍔 快餐</button>
+                            <button class="chip" data-val="exotic">🍕 異國</button>
                         </div>
                     </div>
                 </div>
@@ -120,63 +89,50 @@
         <section id="weekly-sec" class="tab-content">
             <div class="card glass weekly-card">
                 <div class="weekly-header">
-                    <div>
-                        <h2>🗓️ 一週美食備忘錄</h2>
-                        <p class="subtitle">週日一次排好全週飲食，週一到週五徹底零負擔！</p>
-                    </div>
-                    <div class="weekly-header-actions">
-                        <button id="genWeeklyBtn" class="btn btn-primary">✨ 智慧一鍵生成全週菜單</button>
-                        <button id="copyWeeklyBtn" class="btn btn-outline">📋 複製文字菜單</button>
-                    </div>
+                    <h2>🗓️ 一週飲食備忘錄</h2>
+                    <button id="genWeeklyBtn" class="btn btn-primary">✨ 一鍵生成全週菜單</button>
                 </div>
-
-                <div class="weekly-grid" id="weeklyGrid">
-                    <!-- JS 動態渲染 7 天的午晚餐卡片 -->
-                </div>
+                <div class="weekly-grid" id="weeklyGrid"></div>
             </div>
         </section>
 
         <!-- 頁籤三：美饌自訂庫管理 -->
         <section id="manage-sec" class="tab-content">
             <div class="card glass manage-card">
-                <div class="manage-header">
-                    <h2>⚙️ 個人美食清單管理</h2>
-                    <p class="subtitle">新增你家附近的私房店家或最愛菜色，客製化你的決策資料庫</p>
-                </div>
-
+                <h2>⚙️ 我的口袋名單 (<span id="foodCount">0</span>)</h2>
                 <form id="addFoodForm" class="add-food-form">
-                    <input type="text" id="foodName" placeholder="菜色或店家名稱 (例如: 阿財牛肉麵)" required class="form-input">
+                    <input type="text" id="foodName" placeholder="店家/菜色名稱" required class="form-input">
                     <select id="foodCategory" class="form-select">
-                        <option value="rice">🍚 飯食米飯</option>
-                        <option value="noodle">🍜 麵食粉類</option>
-                        <option value="light">🥗 清爽健康</option>
-                        <option value="fast">🍔 快餐漢堡</option>
-                        <option value="exotic">🍕 異國料理</option>
+                        <option value="rice">🍚 米飯</option>
+                        <option value="noodle">🍜 麵食</option>
+                        <option value="light">🥗 清爽</option>
+                        <option value="fast">🍔 快餐</option>
+                        <option value="exotic">🍕 異國</option>
                     </select>
-                    <select id="foodMealType" class="form-select">
-                        <option value="all">🌞&🌙 午晚餐皆宜</option>
-                        <option value="lunch">🌞 午餐限定</option>
-                        <option value="dinner">🌙 晚餐限定</option>
-                    </select>
-                    <button type="submit" class="btn btn-success">+ 新增至口袋名單</button>
+                    <button type="submit" class="btn btn-success">+ 新增</button>
                 </form>
-
-                <div class="food-list-container">
-                    <h3>現有口袋名單 (<span id="foodCount">0</span>)</h3>
-                    <div id="foodList" class="food-chip-list">
-                        <!-- 動態印出美食標籤 -->
-                    </div>
-                </div>
+                <div id="foodList" class="food-chip-list"></div>
             </div>
         </section>
     </main>
 
-    <footer class="app-footer">
-        <p>© 2026 靈感美饌決策助手 Pro • 讓大腦休息，給生活加點美味靈感</p>
-    </footer>
+    <!-- 固定於手機底部的全域導覽列 (Bottom Floating Tab Bar) -->
+    <nav class="bottom-nav">
+        <button class="bottom-tab active" data-tab="slot-sec">
+            <span class="icon">🎲</span>
+            <span class="label">今日決策</span>
+        </button>
+        <button class="bottom-tab" data-tab="weekly-sec">
+            <span class="icon">🗓️</span>
+            <span class="label">一週菜單</span>
+        </button>
+        <button class="bottom-tab" data-tab="manage-sec">
+            <span class="icon">⚙️</span>
+            <span class="label">美食庫</span>
+        </button>
+    </nav>
 
-    <!-- Confetti JS for winning celebration -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=2.0.0"></script>
 </body>
 </html>
