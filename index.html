@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>靈感美饌決策助手 Pro</title>
-    <meta name="description" content="智慧營業時間感應飲食決策工具。">
+    <meta name="description" content="智慧營業時間感應與店家菜單筆記助手。">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=4.0.0">
+    <link rel="stylesheet" href="styles.css?v=5.0.0">
 </head>
 <body>
     <div class="background-blobs">
@@ -23,7 +23,7 @@
             <span class="icon">🍱</span>
             <div class="logo-text">
                 <h1>靈感美饌決策助手</h1>
-                <p>Smart Time Detection • 智慧時段比對</p>
+                <p>Smart Menu Note • 隨手菜單筆記</p>
             </div>
         </div>
     </header>
@@ -31,8 +31,7 @@
     <main class="container">
         <!-- 頁籤一：手機拉霸卡片抽籤 -->
         <section id="slot-sec" class="tab-content active">
-            
-            <!-- ⏰ 自動時間感應狀態列 -->
+            <!-- ⏰ 自動時間對時狀態列 -->
             <div class="time-status-bar">
                 <span class="time-badge" id="autoTimeBadge">⏰ 系統已自動對時：晚餐時段</span>
                 <div class="time-switch">
@@ -57,6 +56,7 @@
 
                     <div class="secondary-actions">
                         <button id="slotBlindBtn" class="sub-btn">🎁 驚喜盲盒</button>
+                        <button id="slotMenuBtn" class="sub-btn menu-btn hidden">📖 點我看菜單</button>
                         <button id="slotMapBtn" class="sub-btn map-btn hidden">📍 尋找附近店家</button>
                     </div>
                 </div>
@@ -94,10 +94,12 @@
             </div>
         </section>
 
-        <!-- 頁籤三：美饌自訂庫管理 -->
+        <!-- 頁籤三：美饌自訂庫與菜單管理 -->
         <section id="manage-sec" class="tab-content">
             <div class="card glass manage-card">
                 <h2>⚙️ 我的口袋名單 (<span id="foodCount">0</span>)</h2>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.8rem;">點擊下方任何一家店，即可查看或上傳菜單照片！</p>
+
                 <form id="addFoodForm" class="add-food-form">
                     <input type="text" id="foodName" placeholder="店家/菜色名稱 (如: 巷口排骨便當)" required class="form-input">
                     <select id="foodCategory" class="form-select">
@@ -114,10 +116,46 @@
                     </select>
                     <button type="submit" class="btn-success">+ 新增至名單</button>
                 </form>
+
                 <div id="foodList" class="food-chip-list"></div>
             </div>
         </section>
     </main>
+
+    <!-- 📖 店家菜單彈窗 (Menu & Detail Modal) -->
+    <div id="menuModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalStoreName">店家名稱</h3>
+                <button id="closeModalBtn" class="close-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-tags" id="modalStoreTags"></div>
+                
+                <!-- 菜單圖片區 -->
+                <div class="menu-section">
+                    <h4>📸 菜單照片</h4>
+                    <div id="menuImageContainer" class="menu-image-box">
+                        <p class="no-menu-hint">尚未上傳菜單照片</p>
+                        <img id="menuImageDisplay" class="menu-img hidden" alt="店家菜單照片">
+                    </div>
+                    <label class="btn-upload">
+                        📷 上傳/更換菜單照片
+                        <input type="file" id="menuImgInput" accept="image/*" class="hidden">
+                    </label>
+                </div>
+
+                <!-- 菜單文字區 -->
+                <div class="menu-section">
+                    <h4>📝 菜單與招牌菜筆記</h4>
+                    <textarea id="menuTextarea" class="menu-textarea" placeholder="在這裡貼上菜單列表或招牌菜 (例如：&#10;• 招牌牛肉麵 $180&#10;• 清燉牛肉麵 $190&#10;• 滷大腸 $60)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveMenuBtn" class="btn-primary" style="width: 100%;">💾 儲存菜單資料</button>
+            </div>
+        </div>
+    </div>
 
     <!-- 固定於手機底部的全域導覽列 -->
     <nav class="bottom-nav">
@@ -136,6 +174,6 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="app.js?v=4.0.0"></script>
+    <script src="app.js?v=5.0.0"></script>
 </body>
 </html>
