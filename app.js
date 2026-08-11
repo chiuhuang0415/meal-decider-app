@@ -16,9 +16,9 @@ const DEFAULT_FOODS = [
 ];
 
 const DEFAULT_RECIPES = [
-    { id: 'r1', title: '經典番茄炒蛋', ingredients: '• 番茄 2顆\n• 雞蛋 3顆\n• 蔥花 1根\n• 鹽 1/2小匙\n• 糖 1小匙\n• 番茄醬 1大匙', steps: '1. 熱鍋加油，雞蛋炒至7分熟盛起。\n2. 爆香蔥白，下番茄塊炒出汁水。\n3. 加雞蛋與調味料翻炒，撒蔥花出鍋！', image: '' },
-    { id: 'r2', title: '蒜香奶油煎雞腿排', ingredients: '• 去骨雞腿排 2片\n• 蒜頭 5瓣\n• 無鹽奶油 15g\n• 黑胡椒、鹽 適量', steps: '1. 雞腿排皮朝下小火煎6-8分鐘。\n2. 翻面加蒜片與奶油，反覆淋在雞腿上。\n3. 兩面金黃後撒胡椒鹽即完成！', image: '' },
-    { id: 'r3', title: '麻婆豆腐', ingredients: '• 嫩豆腐 1盒\n• 豬絞肉 100g\n• 辣豆瓣醬 1.5大匙\n• 花椒粉 1小匙\n• 蒜末、薑末 少許\n• 太白粉水 適量', steps: '1. 豆腐丁川燙備用。\n2. 炒香絞肉，加辣豆瓣醬炒出紅油。\n3. 加水與豆腐煮滾，勾薄芡出鍋！', image: '' }
+    { id: 'r1', title: '經典番茄炒蛋', ingredients: '• 番茄 2顆\n• 雞蛋 3顆\n• 蔥花 1根\n• 鹽 1/2小匙\n• 糖 1小匙\n• 番茄醬 1大匙', steps: '1. 熱鍋加油，雞蛋炒至7分熟盛起。\n2. 爆香蔥白，下番茄塊炒出汁水。\n3. 加雞蛋與調味料翻炒，撒蔥花出鍋！' },
+    { id: 'r2', title: '蒜香奶油煎雞腿排', ingredients: '• 去骨雞腿排 2片\n• 蒜頭 5瓣\n• 無鹽奶油 15g\n• 黑胡椒、鹽 適量', steps: '1. 雞腿排皮朝下小火煎6-8分鐘。\n2. 翻面加蒜片與奶油，反覆淋在雞腿上。\n3. 兩面金黃後撒胡椒鹽即完成！' },
+    { id: 'r3', title: '麻婆豆腐', ingredients: '• 嫩豆腐 1盒\n• 豬絞肉 100g\n• 辣豆瓣醬 1.5大匙\n• 花椒粉 1小匙\n• 蒜末、薑末 少許\n• 太白粉水 適量', steps: '1. 豆腐丁川燙備用。\n2. 炒香絞肉，加辣豆瓣醬炒出紅油。\n3. 加水與豆腐煮滾，勾薄芡出鍋！' }
 ];
 
 // 狀態管理
@@ -35,7 +35,6 @@ let currentFilteredList = [...foodList];
 let selectedFood = null;
 let currentModalFood = null;
 let currentModalRecipe = null;
-let tempRecipeImage = '';
 let recentPicks = [];
 let isRolling = false;
 
@@ -52,31 +51,6 @@ function showToast(message, type = 'success') {
         setTimeout(() => toast.remove(), 300);
     }, 2200);
 }
-
-// 照片壓縮工具 (Canvas 壓縮為 JPEG 80% 品質、最大 600px)
-function compressImage(file, maxSize = 600, quality = 0.8) {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let w = img.width, h = img.height;
-                if (w > maxSize || h > maxSize) {
-                    if (w > h) { h = Math.round(h * maxSize / w); w = maxSize; }
-                    else { w = Math.round(w * maxSize / h); h = maxSize; }
-                }
-                canvas.width = w;
-                canvas.height = h;
-                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                resolve(canvas.toDataURL('image/jpeg', quality));
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
-}
-
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     initBottomNav();
@@ -323,7 +297,7 @@ function closeMenuModal() {
     currentModalFood = null;
 }
 
-// 7. 食譜專區 (含壓縮照片)
+// 7. 食譜專區
 function initRecipeHub() {
     renderRecipeList();
     const spinBtn = document.getElementById('recipeSpinBtn');
@@ -331,7 +305,6 @@ function initRecipeHub() {
     const closeBtn = document.getElementById('closeRecipeModalBtn');
     const saveBtn = document.getElementById('saveRecipeBtn');
     const copyBtn = document.getElementById('copyGroceryBtn');
-    const imgInput = document.getElementById('recipeImgInput');
     const modal = document.getElementById('recipeModal');
 
     if (spinBtn) {
@@ -344,7 +317,7 @@ function initRecipeHub() {
 
     if (addBtn) {
         addBtn.addEventListener('click', () => {
-            openRecipeModal({ id: Date.now().toString(), title: '', ingredients: '', steps: '', image: '' }, true);
+            openRecipeModal({ id: Date.now().toString(), title: '', ingredients: '', steps: '' });
         });
     }
 
@@ -362,21 +335,6 @@ function initRecipeHub() {
         });
     }
 
-    if (imgInput) {
-        imgInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                tempRecipeImage = await compressImage(file);
-                const imgDisplay = document.getElementById('recipeImgDisplay');
-                const hint = document.getElementById('noRecipeImgHint');
-                imgDisplay.src = tempRecipeImage;
-                imgDisplay.classList.remove('hidden');
-                if (hint) hint.classList.add('hidden');
-                showToast('📸 照片已壓縮上傳成功');
-            }
-        });
-    }
-
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
             const title = document.getElementById('recipeTitleInput').value.trim();
@@ -386,7 +344,7 @@ function initRecipeHub() {
 
             if (currentModalRecipe && currentModalRecipe.id) {
                 const idx = recipeList.findIndex(r => r.id === currentModalRecipe.id);
-                const updated = { id: currentModalRecipe.id, title, ingredients, steps, image: tempRecipeImage || currentModalRecipe.image || '' };
+                const updated = { id: currentModalRecipe.id, title, ingredients, steps };
                 if (idx !== -1) { recipeList[idx] = updated; } else { recipeList.push(updated); }
             }
 
@@ -403,10 +361,8 @@ function renderRecipeList() {
     const countEl = document.getElementById('recipeCount');
     if (!grid) return;
     countEl.textContent = recipeList.length;
-    const defaultImg = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231e293b"/><text x="50" y="55" font-size="40" text-anchor="middle" dominant-baseline="middle">🍳</text></svg>';
     grid.innerHTML = recipeList.map(r => `
         <div class="recipe-card" onclick="openRecipeModalById('${r.id}')">
-            <img src="${r.image || defaultImg}" class="recipe-card-img" alt="${r.title}">
             <div class="recipe-card-info">
                 <h4>${r.title}</h4>
                 <p>${r.ingredients ? r.ingredients.replace(/\n/g, ' ') : '尚無食材說明'}</p>
@@ -423,24 +379,15 @@ window.openRecipeModalById = function(id) {
 
 function openRecipeModal(recipe) {
     currentModalRecipe = recipe;
-    tempRecipeImage = recipe.image || '';
     document.getElementById('recipeTitleInput').value = recipe.title || '';
     document.getElementById('recipeIngredientsText').value = recipe.ingredients || '';
     document.getElementById('recipeStepsText').value = recipe.steps || '';
-    const imgDisplay = document.getElementById('recipeImgDisplay');
-    const hint = document.getElementById('noRecipeImgHint');
-    if (tempRecipeImage) {
-        imgDisplay.src = tempRecipeImage; imgDisplay.classList.remove('hidden'); if (hint) hint.classList.add('hidden');
-    } else {
-        imgDisplay.src = ''; imgDisplay.classList.add('hidden'); if (hint) hint.classList.remove('hidden');
-    }
     document.getElementById('recipeModal').classList.remove('hidden');
 }
 
 function closeRecipeModal() {
     document.getElementById('recipeModal').classList.add('hidden');
     currentModalRecipe = null;
-    tempRecipeImage = '';
 }
 
 window.deleteRecipe = function(id) {
