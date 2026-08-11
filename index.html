@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>靈感美饌決策助手 Pro</title>
-    <meta name="description" content="專為手機端打造的極速飲食決策工具。一鍵拉霸決策、解決選擇障礙。">
+    <meta name="description" content="智慧營業時間感應飲食決策工具。">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=3.0.0">
+    <link rel="stylesheet" href="styles.css?v=4.0.0">
 </head>
 <body>
     <div class="background-blobs">
@@ -17,13 +17,13 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- 頂部精簡 Header -->
+    <!-- 頂部 Header -->
     <header class="app-header">
         <div class="logo">
             <span class="icon">🍱</span>
             <div class="logo-text">
                 <h1>靈感美饌決策助手</h1>
-                <p>Mobile App Mode • 秒定今日美味</p>
+                <p>Smart Time Detection • 智慧時段比對</p>
             </div>
         </div>
     </header>
@@ -31,6 +31,17 @@
     <main class="container">
         <!-- 頁籤一：手機拉霸卡片抽籤 -->
         <section id="slot-sec" class="tab-content active">
+            
+            <!-- ⏰ 自動時間感應狀態列 -->
+            <div class="time-status-bar">
+                <span class="time-badge" id="autoTimeBadge">⏰ 系統已自動對時：晚餐時段</span>
+                <div class="time-switch">
+                    <button class="time-btn active" id="timeBtnAuto">🤖 自動感應</button>
+                    <button class="time-btn" id="timeBtnLunch">🌞 午餐</button>
+                    <button class="time-btn" id="timeBtnDinner">🌙 晚餐</button>
+                </div>
+            </div>
+
             <div class="card glass slot-card">
                 <div class="slot-tag" id="slotCategoryTag">✨ 今日美味提案</div>
                 <div class="slot-window">
@@ -54,18 +65,10 @@
             <!-- 情境快篩 -->
             <div class="card glass mobile-filter-card">
                 <div class="filter-header" id="toggleFilterBtn">
-                    <span>🎛️ 智慧情境篩選 (點擊展開)</span>
+                    <span>🎛️ 料理類別快篩 (點擊展開)</span>
                     <span class="arrow">▼</span>
                 </div>
                 <div class="filter-body hidden" id="filterBody">
-                    <div class="filter-group">
-                        <label>餐別時間</label>
-                        <div class="chip-group" data-filter="mealType">
-                            <button class="chip active" data-val="all">全部</button>
-                            <button class="chip" data-val="lunch">🌞 午餐</button>
-                            <button class="chip" data-val="dinner">🌙 晚餐</button>
-                        </div>
-                    </div>
                     <div class="filter-group">
                         <label>美食類別</label>
                         <div class="chip-group" data-filter="category">
@@ -85,7 +88,8 @@
         <section id="weekly-sec" class="tab-content">
             <div class="card glass weekly-card">
                 <h2>🗓️ 一週飲食備忘錄</h2>
-                <button id="genWeeklyBtn" class="btn-primary" style="width: 100%; margin: 0.8rem 0;">✨ 一鍵生成全週菜單</button>
+                <p class="subtitle" style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.8rem;">自動將午餐限定店家排入午餐、晚餐限定店家排入晚餐！</p>
+                <button id="genWeeklyBtn" class="btn-primary" style="width: 100%; margin-bottom: 1rem;">✨ 一鍵生成全週菜單</button>
                 <div class="weekly-grid" id="weeklyGrid"></div>
             </div>
         </section>
@@ -95,13 +99,18 @@
             <div class="card glass manage-card">
                 <h2>⚙️ 我的口袋名單 (<span id="foodCount">0</span>)</h2>
                 <form id="addFoodForm" class="add-food-form">
-                    <input type="text" id="foodName" placeholder="店家/菜色名稱" required class="form-input">
+                    <input type="text" id="foodName" placeholder="店家/菜色名稱 (如: 巷口排骨便當)" required class="form-input">
                     <select id="foodCategory" class="form-select">
                         <option value="rice">🍚 米飯</option>
                         <option value="noodle">🍜 麵食</option>
                         <option value="light">🥗 清爽</option>
                         <option value="fast">🍔 快餐</option>
                         <option value="exotic">🍕 異國</option>
+                    </select>
+                    <select id="foodMealType" class="form-select">
+                        <option value="all">🌞🌙 午晚餐都有開</option>
+                        <option value="lunch">🌞 只有午餐有開 (午餐限定)</option>
+                        <option value="dinner">🌙 只有晚餐有開 (晚餐/宵夜限定)</option>
                     </select>
                     <button type="submit" class="btn-success">+ 新增至名單</button>
                 </form>
@@ -127,6 +136,6 @@
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="app.js?v=3.0.0"></script>
+    <script src="app.js?v=4.0.0"></script>
 </body>
 </html>
