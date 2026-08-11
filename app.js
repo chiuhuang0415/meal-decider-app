@@ -1,4 +1,4 @@
-// app.js - Meal Decider Pro v5.0 Store Menu & Note System
+// app.js - Meal Decider Pro v6.0 Recipe Hub & Menu System
 
 const DEFAULT_FOODS = [
     { 
@@ -30,23 +30,46 @@ const DEFAULT_FOODS = [
         reason: '奶油白醬或濃郁青醬，享受滿滿異國浪漫晚餐。',
         menuText: '• 粉紅醬奶油海鮮麵 $280\n• 青醬培根燉飯 $260\n• 蒜香辣味培根麵 $220\n• 主廚濃湯 $50',
         menuImage: ''
+    }
+];
+
+// 預設經典私房食譜庫
+const DEFAULT_RECIPES = [
+    {
+        id: 'r1',
+        title: '經典番茄炒蛋',
+        ingredients: '• 番茄 2顆 (切塊)\n• 雞蛋 3顆 (打散)\n• 蔥花 1根\n• 鹽 1/2小匙\n• 糖 1小匙\n• 番茄醬 1大匙',
+        steps: '1. 熱鍋加油，將雞蛋炒至7分熟盛起備用。\n2. 爆香蔥白，下番茄塊與番茄醬炒出香味汁水。\n3. 加入少許水煮滾，倒入炒好的雞蛋與調味料翻炒勻。\n4. 撒上蔥花即可香噴噴出鍋！',
+        image: ''
     },
-    { 
-        id: '6', name: '韓式泡菜鍋物 / 燒肉', category: 'exotic', mealType: 'dinner', 
-        reason: '酸辣泡菜湯底配上融化起司，晚餐聚餐熱鬧開胃。',
-        menuText: '• 起司泡菜豬肉鍋 $240\n• 韓式海鮮煎餅 $200\n• 辣炒年糕 $150',
-        menuImage: ''
+    {
+        id: 'r2',
+        title: '蒜香奶油煎雞腿排',
+        ingredients: '• 去骨雞腿排 2片\n• 蒜頭 5瓣 (切片)\n• 無鹽奶油 15g\n• 義式黑胡椒、鹽 適量',
+        steps: '1. 雞腿排皮朝下入平底鍋，小火煎出雞油 (約6-8分鐘)。\n2. 翻面後加入蒜片與奶油，用湯匙將融化奶油反覆淋在雞腿上。\n3. 煎至兩面金黃酥脆，撒上黑胡椒與鹽即可切塊享用！',
+        image: ''
+    },
+    {
+        id: 'r3',
+        title: '麻婆豆腐',
+        ingredients: '• 嫩豆腐 1盒 (切丁)\n• 豬絞肉 100g\n• 辣豆瓣醬 1.5大匙\n• 花椒粉 1小匙\n• 蒜末、薑末 少許\n• 太白粉水 適量',
+        steps: '1. 豆腐丁入熱水加少許鹽川燙盛起備用。\n2. 熱鍋炒香絞肉至變色，加入蒜末、薑末與辣豆瓣醬炒出紅油。\n3. 加入1碗水與豆腐煮滾，小火燉煮3分鐘讓豆腐入味。\n4. 淋入太白粉水勾薄芡，撒上花椒粉與蔥花出鍋！',
+        image: ''
     }
 ];
 
 let foodList = JSON.parse(localStorage.getItem('meal_decider_foods')) || DEFAULT_FOODS;
+let recipeList = JSON.parse(localStorage.getItem('meal_decider_recipes')) || DEFAULT_RECIPES;
+
 let activeFilters = { category: 'all' };
 let timeMode = 'auto';
 let currentMealTime = 'lunch';
 let currentFilteredList = [...foodList];
 let selectedFood = null;
 let currentModalFood = null;
+let currentModalRecipe = null;
 let tempMenuImage = '';
+let tempRecipeImage = '';
 let isRolling = false;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -57,10 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initFoodManager();
     initWeeklyPlanner();
     initMenuModal();
+    initRecipeHub();
     updateTimeAndFilter();
 });
 
-// 1. 底部導覽列切換
+// 1. 底部導覽列
 function initBottomNav() {
     const tabs = document.querySelectorAll('.bottom-tab');
     const contents = document.querySelectorAll('.tab-content');
@@ -78,7 +102,7 @@ function initBottomNav() {
     });
 }
 
-// 2. ⏰ 時間感知
+// 2. 時間感知
 function initTimeDetection() {
     const btnAuto = document.getElementById('timeBtnAuto');
     const btnLunch = document.getElementById('timeBtnLunch');
@@ -131,11 +155,10 @@ function updateFilteredList() {
     }
 }
 
-// 3. 情境快篩
+// 3. 快篩
 function initFilterDrawer() {
     const toggleBtn = document.getElementById('toggleFilterBtn');
     const filterBody = document.getElementById('filterBody');
-
     if (toggleBtn && filterBody) {
         toggleBtn.addEventListener('click', () => filterBody.classList.toggle('hidden'));
     }
@@ -144,7 +167,6 @@ function initFilterDrawer() {
     chipGroups.forEach(group => {
         const filterType = group.getAttribute('data-filter');
         const chips = group.querySelectorAll('.chip');
-
         chips.forEach(chip => {
             chip.addEventListener('click', () => {
                 chips.forEach(c => c.classList.remove('active'));
@@ -156,7 +178,7 @@ function initFilterDrawer() {
     });
 }
 
-// 4. 拉霸機與按鈕觸發
+// 4. 拉霸機
 function initSlotMachine() {
     const spinBtn = document.getElementById('slotSpinBtn');
     const blindBtn = document.getElementById('slotBlindBtn');
@@ -168,9 +190,7 @@ function initSlotMachine() {
 
     if (menuBtn) {
         menuBtn.addEventListener('click', () => {
-            if (selectedFood) {
-                openMenuModal(selectedFood);
-            }
+            if (selectedFood) openMenuModal(selectedFood);
         });
     }
 
@@ -240,24 +260,16 @@ function startSlotRoll(isBlind) {
     }, 1600);
 }
 
-// 5. 📖 菜單與店家詳細彈窗 Modal 邏輯
+// 5. 📖 菜單 Modal
 function initMenuModal() {
     const modal = document.getElementById('menuModal');
     const closeBtn = document.getElementById('closeModalBtn');
     const saveBtn = document.getElementById('saveMenuBtn');
     const imgInput = document.getElementById('menuImgInput');
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeMenuModal);
-    }
+    if (closeBtn) closeBtn.addEventListener('click', closeMenuModal);
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeMenuModal(); });
 
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeMenuModal();
-        });
-    }
-
-    // 上傳照片轉 Base64 預覽
     if (imgInput) {
         imgInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -276,18 +288,13 @@ function initMenuModal() {
         });
     }
 
-    // 儲存菜單資料
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
             if (!currentModalFood) return;
-
             const textarea = document.getElementById('menuTextarea');
             currentModalFood.menuText = textarea.value.trim();
-            if (tempMenuImage) {
-                currentModalFood.menuImage = tempMenuImage;
-            }
+            if (tempMenuImage) currentModalFood.menuImage = tempMenuImage;
 
-            // 更新至主資料庫與 LocalStorage
             const idx = foodList.findIndex(f => f.id === currentModalFood.id);
             if (idx !== -1) {
                 foodList[idx] = { ...currentModalFood };
@@ -309,7 +316,7 @@ function openMenuModal(food) {
     document.getElementById('menuTextarea').value = food.menuText || '';
 
     const imgDisplay = document.getElementById('menuImageDisplay');
-    const hint = document.querySelector('.no-menu-hint');
+    const hint = document.querySelector('#menuImageContainer .no-menu-hint');
     const tagsEl = document.getElementById('modalStoreTags');
 
     const mealLabel = food.mealType === 'lunch' ? '🌞 午餐限定' : (food.mealType === 'dinner' ? '🌙 晚餐限定' : '🌞🌙 全天候');
@@ -334,7 +341,192 @@ function closeMenuModal() {
     tempMenuImage = '';
 }
 
-// 6. 美食庫與口袋名單
+// 6. 👨‍🍳 做菜食譜專區 (Recipe Hub) 邏輯
+function initRecipeHub() {
+    renderRecipeList();
+
+    const spinBtn = document.getElementById('recipeSpinBtn');
+    const addBtn = document.getElementById('openAddRecipeBtn');
+    const closeBtn = document.getElementById('closeRecipeModalBtn');
+    const saveBtn = document.getElementById('saveRecipeBtn');
+    const copyBtn = document.getElementById('copyGroceryBtn');
+    const imgInput = document.getElementById('recipeImgInput');
+    const modal = document.getElementById('recipeModal');
+
+    if (spinBtn) {
+        spinBtn.addEventListener('click', () => {
+            if (recipeList.length === 0) {
+                alert('食譜庫中暫無食譜，快點擊「+ 新增食譜」建立第一道菜吧！');
+                return;
+            }
+            const rand = recipeList[Math.floor(Math.random() * recipeList.length)];
+            openRecipeModal(rand);
+            if (window.confetti) {
+                confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+            }
+        });
+    }
+
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
+            const newRecipe = {
+                id: Date.now().toString(),
+                title: '',
+                ingredients: '',
+                steps: '',
+                image: ''
+            };
+            openRecipeModal(newRecipe, true);
+        });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeRecipeModal);
+    if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeRecipeModal(); });
+
+    // 複製買菜食材清單
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const title = document.getElementById('recipeTitleInput').value.trim() || '私房美食';
+            const ingText = document.getElementById('recipeIngredientsText').value.trim();
+            if (!ingText) {
+                alert('尚未填寫食材清單！');
+                return;
+            }
+            const fullText = `🛒 【${title} - 買菜採買清單】\n------------------\n${ingText}\n------------------\n出自：靈感美饌決策助手 App`;
+            navigator.clipboard.writeText(fullText).then(() => {
+                alert('📋 買菜採買清單已成功複製到剪貼簿！可直接貼在 Line 發給自己或朋友。');
+            });
+        });
+    }
+
+    // 上傳成品照片
+    if (imgInput) {
+        imgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    tempRecipeImage = evt.target.result;
+                    const imgDisplay = document.getElementById('recipeImgDisplay');
+                    const hint = document.getElementById('noRecipeImgHint');
+                    imgDisplay.src = tempRecipeImage;
+                    imgDisplay.classList.remove('hidden');
+                    if (hint) hint.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 儲存食譜
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            const title = document.getElementById('recipeTitleInput').value.trim();
+            if (!title) {
+                alert('請輸入食譜名稱！');
+                return;
+            }
+
+            const ingredients = document.getElementById('recipeIngredientsText').value.trim();
+            const steps = document.getElementById('recipeStepsText').value.trim();
+
+            if (currentModalRecipe && currentModalRecipe.id) {
+                const idx = recipeList.findIndex(r => r.id === currentModalRecipe.id);
+                const updated = {
+                    id: currentModalRecipe.id,
+                    title,
+                    ingredients,
+                    steps,
+                    image: tempRecipeImage || currentModalRecipe.image || ''
+                };
+
+                if (idx !== -1) {
+                    recipeList[idx] = updated;
+                } else {
+                    recipeList.push(updated);
+                }
+            } else {
+                recipeList.push({
+                    id: Date.now().toString(),
+                    title,
+                    ingredients,
+                    steps,
+                    image: tempRecipeImage || ''
+                });
+            }
+
+            localStorage.setItem('meal_decider_recipes', JSON.stringify(recipeList));
+            alert(`✅ 已成功儲存食譜【${title}】！`);
+            closeRecipeModal();
+            renderRecipeList();
+        });
+    }
+}
+
+function renderRecipeList() {
+    const grid = document.getElementById('recipeList');
+    const countEl = document.getElementById('recipeCount');
+    if (!grid) return;
+
+    countEl.textContent = recipeList.length;
+    grid.innerHTML = recipeList.map(r => {
+        const defaultImg = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231e293b"/><text x="50" y="55" font-size="40" text-anchor="middle" dominant-baseline="middle">🍳</text></svg>';
+        const imgSrc = r.image || defaultImg;
+        return `
+            <div class="recipe-card" onclick="openRecipeModalById('${r.id}')">
+                <img src="${imgSrc}" class="recipe-card-img" alt="${r.title}">
+                <div class="recipe-card-info">
+                    <h4>${r.title}</h4>
+                    <p>${r.ingredients ? r.ingredients.replace(/\n/g, ' ') : '尚無食材詳細說明'}</p>
+                </div>
+                <span onclick="event.stopPropagation(); deleteRecipe('${r.id}')" style="color: #ef4444; font-weight: bold; cursor: pointer; padding: 0.5rem;">✕</span>
+            </div>
+        `;
+    }).join('');
+}
+
+window.openRecipeModalById = function(id) {
+    const r = recipeList.find(rec => rec.id === id);
+    if (r) openRecipeModal(r);
+};
+
+function openRecipeModal(recipe, isNew = false) {
+    currentModalRecipe = recipe;
+    tempRecipeImage = recipe.image || '';
+
+    document.getElementById('recipeTitleInput').value = recipe.title || '';
+    document.getElementById('recipeIngredientsText').value = recipe.ingredients || '';
+    document.getElementById('recipeStepsText').value = recipe.steps || '';
+
+    const imgDisplay = document.getElementById('recipeImgDisplay');
+    const hint = document.getElementById('noRecipeImgHint');
+
+    if (tempRecipeImage) {
+        imgDisplay.src = tempRecipeImage;
+        imgDisplay.classList.remove('hidden');
+        if (hint) hint.classList.add('hidden');
+    } else {
+        imgDisplay.src = '';
+        imgDisplay.classList.add('hidden');
+        if (hint) hint.classList.remove('hidden');
+    }
+
+    document.getElementById('recipeModal').classList.remove('hidden');
+}
+
+function closeRecipeModal() {
+    document.getElementById('recipeModal').classList.add('hidden');
+    currentModalRecipe = null;
+    tempRecipeImage = '';
+}
+
+window.deleteRecipe = function(id) {
+    recipeList = recipeList.filter(r => r.id !== id);
+    localStorage.setItem('meal_decider_recipes', JSON.stringify(recipeList));
+    renderRecipeList();
+};
+
+// 7. 美食店家庫
 function initFoodManager() {
     renderFoodList();
     const form = document.getElementById('addFoodForm');
@@ -360,8 +552,6 @@ function initFoodManager() {
             nameInput.value = '';
             renderFoodList();
             updateFilteredList();
-
-            // 自動開啟新店家的菜單編輯
             openMenuModal(newFood);
         });
     }
@@ -398,7 +588,7 @@ window.deleteFood = function(id) {
     updateFilteredList();
 };
 
-// 7. 一週菜單
+// 8. 一週菜單
 function initWeeklyPlanner() {
     const genBtn = document.getElementById('genWeeklyBtn');
     if (genBtn) genBtn.addEventListener('click', generateWeeklyGrid);
