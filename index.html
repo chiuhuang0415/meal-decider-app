@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>靈感美饌決策助手 Pro • 做菜食譜專區</title>
-    <meta name="description" content="智慧營業時間感應、美食決策與私房做菜食譜筆記助手。">
-    <!-- Google Fonts -->
+    <title>靈感美饌決策助手 Pro v7</title>
+    <meta name="description" content="智慧營業時間感應、美食決策、做菜食譜筆記與歷史紀錄助手。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css?v=6.0.0">
+    <link rel="stylesheet" href="styles.css?v=7.0.0">
 </head>
 <body>
     <div class="background-blobs">
@@ -17,25 +16,26 @@
         <div class="blob blob-2"></div>
     </div>
 
-    <!-- 頂部 Header -->
+    <!-- Toast 通知容器 -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <header class="app-header">
         <div class="logo">
             <span class="icon">🍱</span>
             <div class="logo-text">
                 <h1>靈感美饌決策助手</h1>
-                <p>Smart Recipe Hub • 私房做菜與食譜庫</p>
+                <p>Smart Recipe Hub v7 • 全能飲食總管</p>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <!-- 頁籤一：手機拉霸卡片抽籤 -->
+        <!-- Tab 1: Slot Machine -->
         <section id="slot-sec" class="tab-content active">
-            <!-- ⏰ 自動時間對時狀態列 -->
             <div class="time-status-bar">
-                <span class="time-badge" id="autoTimeBadge">⏰ 系統已自動對時：晚餐時段</span>
+                <span class="time-badge" id="autoTimeBadge">⏰ 系統已自動對時</span>
                 <div class="time-switch">
-                    <button class="time-btn active" id="timeBtnAuto">🤖 自動感應</button>
+                    <button class="time-btn active" id="timeBtnAuto">🤖 自動</button>
                     <button class="time-btn" id="timeBtnLunch">🌞 午餐</button>
                     <button class="time-btn" id="timeBtnDinner">🌙 晚餐</button>
                 </div>
@@ -47,22 +47,18 @@
                     <div id="slotText" class="slot-text">🎲 點擊下方按鈕</div>
                 </div>
                 <p id="slotReasonText" class="slot-reason">「放空大腦，讓命運為你選擇最佳美味！」</p>
-
                 <div class="slot-action-area">
                     <button id="slotSpinBtn" class="hero-spin-btn">
-                        <span class="btn-icon">🎰</span>
-                        <span class="btn-text">幫我決定今天吃什麼！</span>
+                        <span>🎰</span><span>幫我決定今天吃什麼！</span>
                     </button>
-
                     <div class="secondary-actions">
                         <button id="slotBlindBtn" class="sub-btn">🎁 驚喜盲盒</button>
-                        <button id="slotMenuBtn" class="sub-btn menu-btn hidden">📖 點我看菜單</button>
-                        <button id="slotMapBtn" class="sub-btn map-btn hidden">📍 尋找附近店家</button>
+                        <button id="slotMenuBtn" class="sub-btn menu-btn hidden">📖 看菜單</button>
+                        <button id="slotMapBtn" class="sub-btn map-btn hidden">📍 找店家</button>
                     </div>
                 </div>
             </div>
 
-            <!-- 情境快篩 -->
             <div class="card glass mobile-filter-card">
                 <div class="filter-header" id="toggleFilterBtn">
                     <span>🎛️ 料理類別快篩 (點擊展開)</span>
@@ -84,44 +80,51 @@
             </div>
         </section>
 
-        <!-- 頁籤二：👨‍🍳 私房做菜與食譜庫專區 -->
+        <!-- Tab 2: Recipe Hub -->
         <section id="recipe-sec" class="tab-content">
-            <div class="card glass slot-card recipe-hero-card">
-                <div class="slot-tag">👨‍🍳 私房大廚決策</div>
+            <div class="card glass slot-card">
+                <div class="slot-tag">👨🍳 私房大廚決策</div>
                 <h2 style="font-size: 1.3rem; margin: 0.3rem 0;">今天親自下廚煮什麼？</h2>
                 <button id="recipeSpinBtn" class="hero-spin-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
                     🍳 隨機抽一道私房食譜！
                 </button>
             </div>
-
             <div class="card glass manage-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
-                    <h2>👨‍🍳 我的私房食譜 (<span id="recipeCount">0</span>)</h2>
+                    <h2>👨🍳 我的私房食譜 (<span id="recipeCount">0</span>)</h2>
                     <button id="openAddRecipeBtn" class="btn-success" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">+ 新增食譜</button>
                 </div>
-
-                <div id="recipeList" class="recipe-grid">
-                    <!-- 動態渲染食譜卡片 -->
-                </div>
+                <div id="recipeList" class="recipe-grid"></div>
             </div>
         </section>
 
-        <!-- 頁籤三：一週菜單規劃 -->
+        <!-- Tab 3: Weekly Planner -->
         <section id="weekly-sec" class="tab-content">
             <div class="card glass weekly-card">
                 <h2>🗓️ 一週飲食備忘錄</h2>
-                <p class="subtitle" style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.8rem;">自動將午餐限定店家排入午餐、晚餐限定店家排入晚餐！</p>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.5rem;">🔒 點擊鎖頭可鎖定該天不被重新生成覆蓋 • 🏠 週六日晚餐自動安排下廚食譜</p>
                 <button id="genWeeklyBtn" class="btn-primary" style="width: 100%; margin-bottom: 1rem;">✨ 一鍵生成全週菜單</button>
                 <div class="weekly-grid" id="weeklyGrid"></div>
             </div>
         </section>
 
-        <!-- 頁籤四：美饌自訂庫管理 -->
+        <!-- Tab 4: History -->
+        <section id="history-sec" class="tab-content">
+            <div class="card glass">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                    <h2>📜 最近吃過紀錄</h2>
+                    <button id="clearHistoryBtn" class="btn-outline" style="font-size: 0.72rem; padding: 0.3rem 0.6rem;">🗑️ 清除</button>
+                </div>
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.8rem;">紀錄每次抽中後確認的選擇，方便回顧近期飲食。</p>
+                <div id="historyList" class="history-list"></div>
+            </div>
+        </section>
+
+        <!-- Tab 5: Food Store Manager -->
         <section id="manage-sec" class="tab-content">
             <div class="card glass manage-card">
                 <h2>⚙️ 我的口袋店家名單 (<span id="foodCount">0</span>)</h2>
-                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.8rem;">點擊下方任何一家店，即可查看或上傳菜單照片！</p>
-
+                <p style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 0.8rem;">點擊任何一家店即可查看或編輯文字菜單！</p>
                 <form id="addFoodForm" class="add-food-form">
                     <input type="text" id="foodName" placeholder="店家/菜色名稱 (如: 巷口排骨便當)" required class="form-input">
                     <select id="foodCategory" class="form-select">
@@ -133,18 +136,17 @@
                     </select>
                     <select id="foodMealType" class="form-select">
                         <option value="all">🌞🌙 午晚餐都有開</option>
-                        <option value="lunch">🌞 只有午餐有開 (午餐限定)</option>
-                        <option value="dinner">🌙 只有晚餐有開 (晚餐/宵夜限定)</option>
+                        <option value="lunch">🌞 只有午餐有開</option>
+                        <option value="dinner">🌙 只有晚餐有開</option>
                     </select>
                     <button type="submit" class="btn-success">+ 新增至店家名單</button>
                 </form>
-
                 <div id="foodList" class="food-chip-list"></div>
             </div>
         </section>
     </main>
 
-    <!-- 📖 店家菜單 Modal -->
+    <!-- Store Menu Modal (text only) -->
     <div id="menuModal" class="modal-overlay hidden">
         <div class="modal-card">
             <div class="modal-header">
@@ -154,19 +156,9 @@
             <div class="modal-body">
                 <div class="modal-tags" id="modalStoreTags"></div>
                 <div class="menu-section">
-                    <h4>📸 菜單照片</h4>
-                    <div id="menuImageContainer" class="menu-image-box">
-                        <p class="no-menu-hint">尚未上傳菜單照片</p>
-                        <img id="menuImageDisplay" class="menu-img hidden" alt="店家菜單照片">
-                    </div>
-                    <label class="btn-upload">
-                        📷 上傳/更換菜單照片
-                        <input type="file" id="menuImgInput" accept="image/*" class="hidden">
-                    </label>
-                </div>
-                <div class="menu-section">
                     <h4>📝 菜單與招牌菜筆記</h4>
-                    <textarea id="menuTextarea" class="menu-textarea" placeholder="在這裡貼上菜單列表或招牌菜..."></textarea>
+                    <p style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 0.4rem;">💡 拍菜單照片丟給 AI 整理成文字，直接貼在這裡！</p>
+                    <textarea id="menuTextarea" class="menu-textarea" style="height: 200px;" placeholder="在這裡貼上菜單列表或招牌菜 (例如：&#10;• 招牌排骨飯 $110&#10;• 酥炸大雞腿飯 $120&#10;• 招牌滷肉飯 $65)"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -175,17 +167,15 @@
         </div>
     </div>
 
-    <!-- 👨‍🍳 私房食譜詳情與編輯 Modal -->
+    <!-- Recipe Modal -->
     <div id="recipeModal" class="modal-overlay hidden">
         <div class="modal-card">
             <div class="modal-header">
-                <h3 id="recipeModalTitle">👨‍🍳 私房食譜內容</h3>
+                <h3 id="recipeModalTitle">👨🍳 私房食譜</h3>
                 <button id="closeRecipeModalBtn" class="close-btn">✕</button>
             </div>
             <div class="modal-body">
                 <input type="text" id="recipeTitleInput" class="form-input" placeholder="食譜名稱 (例如：番茄炒蛋)" style="margin-bottom: 0.8rem; font-weight: bold;">
-                
-                <!-- 食譜照片上傳 -->
                 <div class="menu-section">
                     <h4>📸 成品照片</h4>
                     <div class="menu-image-box">
@@ -197,20 +187,16 @@
                         <input type="file" id="recipeImgInput" accept="image/*" class="hidden">
                     </label>
                 </div>
-
-                <!-- 食材採買清單 -->
                 <div class="menu-section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
                         <h4>🛒 所需食材與調味料</h4>
                         <button id="copyGroceryBtn" class="btn-outline" style="font-size: 0.72rem; padding: 0.2rem 0.5rem; min-height: auto;">📋 複製買菜清單</button>
                     </div>
-                    <textarea id="recipeIngredientsText" class="menu-textarea" placeholder="輸入所需食材 (例如：&#10;• 番茄 2顆&#10;• 雞蛋 3顆&#10;• 蔥花 少許&#10;• 鹽、糖 1小匙)"></textarea>
+                    <textarea id="recipeIngredientsText" class="menu-textarea" placeholder="輸入所需食材 (例如：&#10;• 番茄 2顆&#10;• 雞蛋 3顆&#10;• 蔥花 少許)"></textarea>
                 </div>
-
-                <!-- 料理步驟 -->
                 <div class="menu-section">
-                    <h4>👩‍🍳 烹飪步驟與秘訣</h4>
-                    <textarea id="recipeStepsText" class="menu-textarea" placeholder="輸入料理步驟 (例如：&#10;1. 雞蛋打散炒至七分熟盛起&#10;2. 番茄切塊炒出汁&#10;3. 加入雞蛋與調味料翻炒出鍋)"></textarea>
+                    <h4>👩🍳 烹飪步驟與秘訣</h4>
+                    <textarea id="recipeStepsText" class="menu-textarea" placeholder="輸入料理步驟..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -219,27 +205,25 @@
         </div>
     </div>
 
-    <!-- 固定於手機底部的全域導覽列 (4 Tabs) -->
     <nav class="bottom-nav">
         <button class="bottom-tab active" data-tab="slot-sec">
-            <span class="icon">🎲</span>
-            <span class="label">今日決策</span>
+            <span class="icon">🎲</span><span class="label">今日決策</span>
         </button>
         <button class="bottom-tab" data-tab="recipe-sec">
-            <span class="icon">👨‍🍳</span>
-            <span class="label">做菜食譜</span>
+            <span class="icon">👨🍳</span><span class="label">食譜</span>
         </button>
         <button class="bottom-tab" data-tab="weekly-sec">
-            <span class="icon">🗓️</span>
-            <span class="label">一週菜單</span>
+            <span class="icon">🗓️</span><span class="label">一週菜單</span>
+        </button>
+        <button class="bottom-tab" data-tab="history-sec">
+            <span class="icon">📜</span><span class="label">紀錄</span>
         </button>
         <button class="bottom-tab" data-tab="manage-sec">
-            <span class="icon">⚙️</span>
-            <span class="label">美食庫</span>
+            <span class="icon">⚙️</span><span class="label">店家庫</span>
         </button>
     </nav>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="app.js?v=6.0.0"></script>
+    <script src="app.js?v=7.0.0"></script>
 </body>
 </html>
