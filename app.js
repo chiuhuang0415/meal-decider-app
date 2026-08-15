@@ -274,7 +274,7 @@ function initMenuModal() {
             const idx = foodList.findIndex(f => f.id === currentModalFood.id);
             if (idx !== -1) {
                 foodList[idx] = { ...currentModalFood };
-                localStorage.setItem('meal_decider_foods_v7', JSON.stringify(foodList));
+                localStorage.setItem('meal_decider_foods_v8', JSON.stringify(foodList));
             }
             showToast(`✅ 已儲存【${currentModalFood.name}】的菜單`);
             closeMenuModal();
@@ -349,7 +349,7 @@ function initRecipeHub() {
                 if (idx !== -1) { recipeList[idx] = updated; } else { recipeList.push(updated); }
             }
 
-            localStorage.setItem('meal_decider_recipes_v7', JSON.stringify(recipeList));
+            localStorage.setItem('meal_decider_recipes_v8', JSON.stringify(recipeList));
             showToast(`✅ 已儲存食譜【${title}】`);
             closeRecipeModal();
             renderRecipeList();
@@ -395,7 +395,7 @@ function closeRecipeModal() {
 window.deleteRecipe = function(id) {
     if (!confirm('確定要刪除這道食譜嗎？')) return;
     recipeList = recipeList.filter(r => r.id !== id);
-    localStorage.setItem('meal_decider_recipes_v7', JSON.stringify(recipeList));
+    localStorage.setItem('meal_decider_recipes_v8', JSON.stringify(recipeList));
     renderRecipeList();
     showToast('🗑️ 食譜已刪除');
 };
@@ -417,7 +417,7 @@ function initFoodManager() {
                 menuText: ''
             };
             foodList.push(newFood);
-            localStorage.setItem('meal_decider_foods_v7', JSON.stringify(foodList));
+            localStorage.setItem('meal_decider_foods_v8', JSON.stringify(foodList));
             nameInput.value = '';
             renderFoodList();
             updateFilteredList();
@@ -453,7 +453,7 @@ window.openFoodMenuById = function(id) {
 window.deleteFood = function(id) {
     if (!confirm('確定要刪除這家店嗎？')) return;
     foodList = foodList.filter(f => f.id !== id);
-    localStorage.setItem('meal_decider_foods_v7', JSON.stringify(foodList));
+    localStorage.setItem('meal_decider_foods_v8', JSON.stringify(foodList));
     renderFoodList();
     updateFilteredList();
     showToast('🗑️ 店家已刪除');
