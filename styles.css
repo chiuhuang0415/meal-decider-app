@@ -172,7 +172,7 @@ html, body {
 
 /* Modal */
 .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh;
     background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     z-index: 1000; display: flex; justify-content: center; align-items: flex-end;
 }
@@ -181,7 +181,7 @@ html, body {
 
 .modal-card {
     background: #0f172a; border: 1px solid var(--card-border); border-top-left-radius: 24px; border-top-right-radius: 24px;
-    width: 100%; max-width: 500px; max-height: 85vh; display: flex; flex-direction: column;
+    width: 100%; max-width: 500px; max-height: 85vh; max-height: 85dvh; display: flex; flex-direction: column;
     padding: 1.2rem; box-shadow: 0 -10px 30px rgba(0,0,0,0.6); animation: modalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @media (min-width: 500px) { .modal-card { border-radius: var(--radius-lg); } }
