@@ -37,8 +37,41 @@ const DEFAULT_RECIPES = [
 ];
 
 // 狀態管理
-let foodList = JSON.parse(localStorage.getItem('meal_decider_foods_v8')) || DEFAULT_FOODS;
-let recipeList = JSON.parse(localStorage.getItem('meal_decider_recipes_v8')) || DEFAULT_RECIPES;
+// 合併預設清單與本機清單：使用者編輯過的項目保留，新增的內建項目(id 未出現在本機)自動補上；
+// 使用者曾刪除的內建項目記在 meal_decider_removed_defaults，不會被重新合併回來。
+function getRemovedDefaults() {
+    try {
+        return JSON.parse(localStorage.getItem('meal_decider_removed_defaults')) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function mergeWithDefaults(storageKey, defaults) {
+    let stored;
+    try {
+        stored = JSON.parse(localStorage.getItem(storageKey));
+    } catch (e) {
+        stored = null;
+    }
+    if (!Array.isArray(stored)) return [...defaults];
+    const removedIds = new Set(getRemovedDefaults()[storageKey] || []);
+    const storedIds = new Set(stored.map(item => item.id));
+    const missing = defaults.filter(d => !storedIds.has(d.id) && !removedIds.has(d.id));
+    return [...stored, ...missing];
+}
+
+function recordRemovedDefault(storageKey, id, defaults) {
+    if (!defaults.some(d => d.id === id)) return; // 只記內建項目，使用者自建的刪了就算了
+    const removed = getRemovedDefaults();
+    const list = new Set(removed[storageKey] || []);
+    list.add(id);
+    removed[storageKey] = [...list];
+    localStorage.setItem('meal_decider_removed_defaults', JSON.stringify(removed));
+}
+
+let foodList = mergeWithDefaults('meal_decider_foods_v8', DEFAULT_FOODS);
+let recipeList = mergeWithDefaults('meal_decider_recipes_v8', DEFAULT_RECIPES);
 let eatingHistory = JSON.parse(localStorage.getItem('meal_decider_history')) || [];
 let weeklyLocks = JSON.parse(localStorage.getItem('meal_decider_weekly_locks')) || {};
 let weeklyData = JSON.parse(localStorage.getItem('meal_decider_weekly_data')) || null;
@@ -408,6 +441,7 @@ function closeRecipeModal() {
 
 window.deleteRecipe = function(id) {
     if (!confirm('確定要刪除這道食譜嗎？')) return;
+    recordRemovedDefault('meal_decider_recipes_v8', id, DEFAULT_RECIPES);
     recipeList = recipeList.filter(r => r.id !== id);
     localStorage.setItem('meal_decider_recipes_v8', JSON.stringify(recipeList));
     renderRecipeList();
@@ -466,6 +500,7 @@ window.openFoodMenuById = function(id) {
 
 window.deleteFood = function(id) {
     if (!confirm('確定要刪除這家店嗎？')) return;
+    recordRemovedDefault('meal_decider_foods_v8', id, DEFAULT_FOODS);
     foodList = foodList.filter(f => f.id !== id);
     localStorage.setItem('meal_decider_foods_v8', JSON.stringify(foodList));
     renderFoodList();
